@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" manifest="offline.manifest.php">
+<head>
+    <title>半离线</title>
+    <!--<link rel="stylesheet" href="./css/index.css">-->
+    <script src="./source/jquery-3.1.1.js"></script>
+    <script>
+        window.APP = {}
+
+        $(document).ready(function () {
+
+            if (navigator && navigator.onLine == true) {
+                // APP.mainCon.start();
+                $.ajax({
+                    url : 'api/resources/index.php',
+                    dataType :　'json',
+                    type : 'GET',
+                    success : online,
+                    error : offline
+                });
+            }else {
+                offline();
+            }
+
+
+
+        })
+
+        function online (data) {
+            insetScript(data, true);
+        }
+
+        function offline (err) {
+            if (localStorage && localStorage.resources){
+                var data = JSON.parse(localStorage.resources);
+                insetScript(data, false);
+            }
+        }
+
+        function insetScript (data, isOnline) {
+            var oScript = document.createElement('script');
+            oScript.innerHTML = data["js"];
+            document.head.appendChild(oScript);
+            APP.mainCon.start(data, isOnline);
+        }
+    </script>
+</head>
+<body>
+    <!--<script src="./source/model/base.js"></script>
+    <script src="./source/view/viewArticle.js"></script>
+    <script src="./source/controller/mainCon.js"></script>
+    <script src="./source/controller/secondCon.js"></script>
+    <script src="./source/model/modelArticle.js"></script>-->
+</body>
+</html>
